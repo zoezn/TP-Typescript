@@ -1,0 +1,120 @@
+:root {
+  --rosa: #ff7878;
+  --rosabebe: #ffb2b2;
+  --rojo: #df4646;
+  --bordo: #a70808;
+}
+* {
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  color: white;
+}
+body {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+.oculto {
+  display: none !important;
+}
+
+button,
+.btn {
+  font-weight: 400;
+  background-color: rgba(167, 8, 8, 0.2);
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+}
+.btn:hover {
+  cursor: pointer;
+}
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 50px;
+  background-color: rgba(167, 8, 8, 0.4);
+  border-radius: 0 0 50px 50px;
+}
+.utils {
+  display: flex;
+}
+#btn-add-gasto {
+  background-color: rgba(167, 8, 8, 0.2);
+  padding: 10px;
+  border-radius: 10px;
+}
+#btn-add-gasto:hover {
+  background-color: rgba(167, 8, 8, 0.25);
+}
+
+.historial-contenedor {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.gasto {
+  display: flex;
+  justify-content: space-around;
+  width: 80%;
+  background-color: rgba(167, 8, 8, 0.28);
+}
+.par {
+  background-color: rgba(167, 8, 8, 0.36);
+}
+.agregar-gasto {
+  position: fixed;
+  width: 430px;
+  height: 280px;
+  top: 50%;
+  left: 50%;
+  margin-top: -140px;
+  margin-left: -215px;
+  z-index: 10;
+  background-color: #dc6767;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 20px;
+}
+.agregar-gasto label {
+  display: block;
+}
+.agregar-gasto input,
+select {
+  margin-left: 10px;
+  padding: 8px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: rgba(255, 178, 178, 0.3);
+  color: white;
+  font-size: 18px;
+}
+.agregar-gasto select:focus {
+  background-color: #e96767;
+}
+.buttons {
+  display: flex;
+  width: 100%;
+  /* align-items: ; */
+  justify-content: right;
+}
+#btn-cancelar,
+#btn-aceptar {
+  font-size: 16px;
+  /* background-color: ; */
+  /* align-self: flex-end; */
+}
+#btn-cancelar {
+  background: none;
+  border: solid rgba(167, 8, 8, 0.2) 3px;
+  margin-right: 8px;
+  /* background-color: none; */
+  /* align-self: flex-end; */
+}
+.error {
+  border: solid rgba(167, 8, 8, 1) 2px !important;
+}

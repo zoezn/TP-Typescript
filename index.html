@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestor de gastos personales</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header></header>
+    <main>
+      <div class="encabezado">
+        <h1>Gatos personales del mes</h1>
+        <div class="utils">
+          <h3 id="btn-add-gasto" class="btn">Agregar nuevo gasto</h3>
+          <button id="modo-tema">
+            <img src="./img/sun.svg" alt="sol" id="sol" />
+            <img src="./img/moon.svg" alt="luna" id="luna" />
+          </button>
+        </div>
+        <div class="agregar-gasto oculto">
+          <form>
+            <h2>Ingrese información sobre el nuevo gasto</h2>
+            <label for="nombre"
+              >Nombre:
+              <input type="text" name="nombre" id="input-nombre" />
+            </label>
+            <label for="total"
+              >Total:
+              <input type="text" name="total" id="input-total" />
+            </label>
+            <label for="categorias"
+              >Categoría:
+              <select name="categorias" id="select-categorias">
+                <option value="hogar">Hogar</option>
+                <option value="impuestos">Impuestos</option>
+                <option value="salidas">Salidas</option>
+                <option value="regalos">Regalos</option>
+                <option value="emergencias">Emergencias</option>
+              </select>
+            </label>
+            <div class="buttons">
+              <button type="reset" id="btn-cancelar">Cancelar</button>
+              <button type="submit" id="btn-aceptar">Aceptar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="graficos-contenedor"></div>
+      <div class="historial-contenedor" id="historial-contenedor"></div>
+    </main>
+    <footer></footer>
+    <script src="./app.js"></script>
+  </body>
+</html>
