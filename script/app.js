@@ -4,6 +4,7 @@ var modalAgregarGasto = document.querySelector(".agregar-gasto");
 var btnAgregarNuevoGasto = document.querySelector("#btn-aceptar");
 var formulario = document.querySelector("form");
 var inputNombre = document.getElementById("input-nombre");
+var inputFecha = document.getElementById("input-fecha");
 var inputTotal = document.getElementById("input-total");
 var inputCategoria = (document.getElementById("select-categorias"));
 // Utiles
@@ -15,23 +16,27 @@ var esPrimo = function (num) {
     return num > 1;
 };
 // Informacion
-var historial = [
-    {
-        nombre: "Luz",
-        total: 1000,
-        categoria: "impuestos",
-    },
-    {
-        nombre: "Alquiler",
-        total: 350000,
-        categoria: "hogar",
-    },
-];
+// let historial: Gasto[] = [
+//   {
+//     nombre: "Luz",
+//     total: 1000,
+//     categoria: "impuestos",
+//   },
+//   {
+//     nombre: "Alquiler",
+//     total: 350000,
+//     categoria: "hogar",
+//   },
+// ];
+var historial = [];
+localStorage.setItem("historial", JSON.stringify(historial));
+//  localStorage.setItem('historial',);
+// let gastos = localStorage.getItem('historial');
 // Renderizado de historial de gastos
 function renderizarGastos() {
-    historialContenedor === null || historialContenedor === void 0 ? void 0 : historialContenedor.innerHTML = null;
+    historialContenedor.innerHTML = "";
     historial.forEach(function (g, i) {
-        return (historialContenedor === null || historialContenedor === void 0 ? void 0 : historialContenedor.innerHTML += "\n        <div class=\"gasto ".concat(esPrimo(i + 1) ? "impar" : "par", "\">\n            <h2>").concat(g.nombre, "</h2> \n            <p>").concat(g.categoria, "</p>\n            <p>").concat(g.total, "</p> \n            </div>\n        "));
+        return (historialContenedor.innerHTML += "\n        <div class=\"gasto ".concat(esPrimo(i + 1) ? "impar" : "par", "\">\n            <h3>").concat(g.fecha, "</h3> \n            <h2>").concat(g.nombre, "</h2> \n            <p>").concat(g.categoria, "</p>\n            <p>").concat(g.total, "</p> \n            </div>\n        "));
     });
 }
 renderizarGastos();
@@ -66,10 +71,12 @@ btnAgregarNuevoGasto === null || btnAgregarNuevoGasto === void 0 ? void 0 : btnA
     if (inputVacio === false) {
         var nuevoGasto = {
             nombre: inputNombre.value,
+            fecha: inputFecha.value,
             total: parseInt(inputTotal.value),
             categoria: inputCategoria.value,
         };
         historial.push(nuevoGasto);
+        localStorage.setItem("historial", JSON.stringify(historial));
         renderizarGastos();
         modalAgregarGasto === null || modalAgregarGasto === void 0 ? void 0 : modalAgregarGasto.classList.add("oculto");
     }

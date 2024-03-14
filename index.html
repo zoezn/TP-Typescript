@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestor de gastos personales</title>
 
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./style/style.css" />
   </head>
   <body>
     <header></header>
     <main>
       <div class="encabezado">
-        <h1>Gatos personales del mes</h1>
+        <h1>Gatos personales</h1>
         <div class="utils">
           <h3 id="btn-add-gasto" class="btn">Agregar nuevo gasto</h3>
-          <button id="modo-tema">
-            <img src="./img/sun.svg" alt="sol" id="sol" />
-            <img src="./img/moon.svg" alt="luna" id="luna" />
-          </button>
+          <div id="modo-tema" class="btn">
+            <img src="./img/sun.svg" alt="sol" id="sol" class="" />
+            <img src="./img/moon.svg" alt="luna" id="luna" class="oculto" />
+          </div>
         </div>
         <div class="agregar-gasto oculto">
           <form>
@@ -28,7 +28,11 @@
             </label>
             <label for="total"
               >Total:
-              <input type="text" name="total" id="input-total" />
+              <input type="number" name="total" id="input-total" />
+            </label>
+            <label for="fecha"
+              >Fecha:
+              <input type="date" name="fecha" id="input-fecha" />
             </label>
             <label for="categorias"
               >Categoría:
@@ -51,6 +55,7 @@
       <div class="historial-contenedor" id="historial-contenedor"></div>
     </main>
     <footer></footer>
-    <script src="./app.js"></script>
+    <script src="./script/app.js"></script>
+    <script src="./script/theme/themes.js"></script>
   </body>
 </html>

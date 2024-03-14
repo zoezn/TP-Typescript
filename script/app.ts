@@ -3,14 +3,28 @@ type Gasto = {
   nombre: string;
   total: number;
   categoria: string;
+  fecha: string;
+};
+type Gasto2 = {
+  nombre: string;
+  total: number;
+  categoria: string;
+  fecha: Date;
 };
 
-const historialContenedor = document.getElementById("historial-contenedor");
-const btnAbrirModal = document.getElementById("btn-add-gasto");
-const modalAgregarGasto = document.querySelector(".agregar-gasto");
+const historialContenedor: HTMLElement = document.getElementById(
+  "historial-contenedor"
+) as HTMLElement;
+const btnAbrirModal: HTMLElement = document.getElementById(
+  "btn-add-gasto"
+) as HTMLElement;
+const modalAgregarGasto: HTMLElement = document.querySelector(
+  ".agregar-gasto"
+) as HTMLElement;
 const btnAgregarNuevoGasto = document.querySelector("#btn-aceptar");
 const formulario = document.querySelector("form");
 let inputNombre = <HTMLInputElement>document.getElementById("input-nombre");
+let inputFecha = <HTMLInputElement>document.getElementById("input-fecha");
 let inputTotal = <HTMLInputElement>document.getElementById("input-total");
 let inputCategoria = <HTMLSelectElement>(
   document.getElementById("select-categorias")
@@ -24,26 +38,31 @@ const esPrimo = (num: number) => {
   return num > 1;
 };
 // Informacion
-let historial: Gasto[] = [
-  {
-    nombre: "Luz",
-    total: 1000,
-    categoria: "impuestos",
-  },
-  {
-    nombre: "Alquiler",
-    total: 350000,
-    categoria: "hogar",
-  },
-];
+// let historial: Gasto[] = [
+//   {
+//     nombre: "Luz",
+//     total: 1000,
+//     categoria: "impuestos",
+//   },
+//   {
+//     nombre: "Alquiler",
+//     total: 350000,
+//     categoria: "hogar",
+//   },
+// ];
+let historial: Gasto[] = [];
+localStorage.setItem("historial", JSON.stringify(historial));
+//  localStorage.setItem('historial',);
+// let gastos = localStorage.getItem('historial');
 
 // Renderizado de historial de gastos
 function renderizarGastos() {
-  historialContenedor?.innerHTML = null;
+  historialContenedor.innerHTML = "";
   historial.forEach(
     (g, i) =>
-      (historialContenedor?.innerHTML += `
+      (historialContenedor!.innerHTML += `
         <div class="gasto ${esPrimo(i + 1) ? "impar" : "par"}">
+            <h3>${g.fecha}</h3> 
             <h2>${g.nombre}</h2> 
             <p>${g.categoria}</p>
             <p>${g.total}</p> 
@@ -87,10 +106,12 @@ btnAgregarNuevoGasto?.addEventListener("click", function (e) {
   if (inputVacio === false) {
     let nuevoGasto: Gasto = {
       nombre: inputNombre.value,
+      fecha: inputFecha.value,
       total: parseInt(inputTotal.value),
       categoria: inputCategoria.value,
     };
     historial.push(nuevoGasto);
+    localStorage.setItem("historial", JSON.stringify(historial));
     renderizarGastos();
     modalAgregarGasto?.classList.add("oculto");
   }

@@ -38,6 +38,7 @@ button,
 }
 .utils {
   display: flex;
+  align-items: center;
 }
 #btn-add-gasto {
   background-color: rgba(167, 8, 8, 0.2);
@@ -58,7 +59,8 @@ button,
 .gasto {
   display: flex;
   justify-content: space-around;
-  width: 80%;
+  align-items: center;
+  width: 100%;
   background-color: rgba(167, 8, 8, 0.28);
 }
 .par {
@@ -67,10 +69,10 @@ button,
 .agregar-gasto {
   position: fixed;
   width: 430px;
-  height: 280px;
+  height: 335px;
   top: 50%;
   left: 50%;
-  margin-top: -140px;
+  margin-top: -165px;
   margin-left: -215px;
   z-index: 10;
   background-color: #dc6767;
@@ -96,24 +98,42 @@ select {
 .agregar-gasto select:focus {
   background-color: #e96767;
 }
+
+#modo-tema {
+  height: fit-content;
+  border-radius: 100px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+#modo-tema:hover {
+  background-color: rgba(167, 8, 8, 0.25);
+}
+#modo-tema img {
+  height: 28px;
+  width: 28px;
+  border-radius: 100px;
+  fill: white !important;
+}
+#modo-tema img svg {
+  fill: white !important;
+}
+
 .buttons {
   display: flex;
   width: 100%;
-  /* align-items: ; */
   justify-content: right;
 }
 #btn-cancelar,
 #btn-aceptar {
   font-size: 16px;
-  /* background-color: ; */
-  /* align-self: flex-end; */
 }
 #btn-cancelar {
   background: none;
   border: solid rgba(167, 8, 8, 0.2) 3px;
   margin-right: 8px;
-  /* background-color: none; */
-  /* align-self: flex-end; */
 }
 .error {
   border: solid rgba(167, 8, 8, 1) 2px !important;
