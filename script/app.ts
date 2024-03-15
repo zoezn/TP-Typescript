@@ -22,6 +22,9 @@ const modalAgregarGasto: HTMLElement = document.querySelector(
   ".agregar-gasto"
 ) as HTMLElement;
 const btnAgregarNuevoGasto = document.querySelector("#btn-aceptar");
+const btnCancelarNuevoGasto: HTMLElement = document.querySelector(
+  "#btn-cancelar"
+) as HTMLElement;
 const formulario = document.querySelector("form");
 let inputNombre = <HTMLInputElement>document.getElementById("input-nombre");
 let inputFecha = <HTMLInputElement>document.getElementById("input-fecha");
@@ -37,20 +40,17 @@ const esPrimo = (num: number) => {
   }
   return num > 1;
 };
-// Informacion
-// let historial: Gasto[] = [
-//   {
-//     nombre: "Luz",
-//     total: 1000,
-//     categoria: "impuestos",
-//   },
-//   {
-//     nombre: "Alquiler",
-//     total: 350000,
-//     categoria: "hogar",
-//   },
-// ];
-let historial: Gasto[] = [];
+
+let historial: Gasto[] | string =
+  localStorage.getItem("historial") || ([] as Gasto[]);
+console.log(localStorage.getItem("historial"));
+// function chequearStorage() {
+//   if (Array.isArray(historial) && historial?.length > 0) {
+//     renderizarGastos();
+//   }
+// }
+// chequearStorage();
+localStorage.getItem("historial");
 localStorage.setItem("historial", JSON.stringify(historial));
 //  localStorage.setItem('historial',);
 // let gastos = localStorage.getItem('historial');
@@ -58,9 +58,10 @@ localStorage.setItem("historial", JSON.stringify(historial));
 // Renderizado de historial de gastos
 function renderizarGastos() {
   historialContenedor.innerHTML = "";
-  historial.forEach(
-    (g, i) =>
-      (historialContenedor!.innerHTML += `
+  Array.isArray(historial) &&
+    historial?.forEach(
+      (g, i) =>
+        (historialContenedor!.innerHTML += `
         <div class="gasto ${esPrimo(i + 1) ? "impar" : "par"}">
             <h3>${g.fecha}</h3> 
             <h2>${g.nombre}</h2> 
@@ -68,17 +69,18 @@ function renderizarGastos() {
             <p>${g.total}</p> 
             </div>
         `)
-  );
+    );
 }
 renderizarGastos();
 
 function agregarGasto() {
-  historial.push();
+  Array.isArray(historial) && historial?.push();
 }
 
 function handleVisibilidad(elemento: Element) {
-  elemento?.classList.remove("oculto");
-  // console.log("hizo click");
+  elemento.classList.contains("oculto")
+    ? elemento.classList.remove("oculto")
+    : elemento.classList.add("oculto");
 }
 
 btnAbrirModal?.addEventListener("click", function (e) {
@@ -110,9 +112,18 @@ btnAgregarNuevoGasto?.addEventListener("click", function (e) {
       total: parseInt(inputTotal.value),
       categoria: inputCategoria.value,
     };
-    historial.push(nuevoGasto);
+    Array.isArray(historial) && historial?.push(nuevoGasto);
     localStorage.setItem("historial", JSON.stringify(historial));
     renderizarGastos();
     modalAgregarGasto?.classList.add("oculto");
   }
+});
+btnCancelarNuevoGasto?.addEventListener("click", function (e) {
+  e.preventDefault();
+  inputNombre.value = "";
+  inputTotal.value = "";
+  inputCategoria.value = "";
+  inputFecha.value = "";
+
+  handleVisibilidad(modalAgregarGasto);
 });
