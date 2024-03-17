@@ -1,3 +1,4 @@
+const body: HTMLElement = document.getElementById("body") as HTMLElement;
 const themeButton: HTMLElement = document.getElementById(
   "modo-tema"
 ) as HTMLElement;
@@ -12,4 +13,9 @@ themeButton.addEventListener("click", () => {
     sun.classList.add("oculto");
     moon.classList.remove("oculto");
   }
+  modoOscuro();
 });
+
+function modoOscuro() {
+  body.classList.toggle("dark");
+}

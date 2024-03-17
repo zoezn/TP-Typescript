@@ -3,6 +3,11 @@ var btnAbrirModal = document.getElementById("btn-add-gasto");
 var modalAgregarGasto = document.querySelector(".agregar-gasto");
 var btnAgregarNuevoGasto = document.querySelector("#btn-aceptar");
 var btnCancelarNuevoGasto = document.querySelector("#btn-cancelar");
+var errorNombre = document.querySelector(".error-nombre");
+var errorTotal = document.querySelector(".error-total");
+var errorFecha = document.querySelector(".error-fecha");
+var errorCat = document.querySelector(".error-cat");
+var blurSpan = document.querySelector(".blur");
 var formulario = document.querySelector("form");
 var inputNombre = document.getElementById("input-nombre");
 var inputFecha = document.getElementById("input-fecha");
@@ -16,18 +21,12 @@ var esPrimo = function (num) {
     }
     return num > 1;
 };
-var historial = localStorage.getItem("historial") || [];
-console.log(localStorage.getItem("historial"));
-// function chequearStorage() {
-//   if (Array.isArray(historial) && historial?.length > 0) {
-//     renderizarGastos();
-//   }
-// }
-// chequearStorage();
-localStorage.getItem("historial");
-localStorage.setItem("historial", JSON.stringify(historial));
-//  localStorage.setItem('historial',);
-// let gastos = localStorage.getItem('historial');
+function handleVisibilidad(elemento) {
+    elemento.classList.contains("oculto")
+        ? elemento.classList.remove("oculto")
+        : elemento.classList.add("oculto");
+}
+var historial = JSON.parse(localStorage.getItem("historial") || []);
 // Renderizado de historial de gastos
 function renderizarGastos() {
     historialContenedor.innerHTML = "";
@@ -40,12 +39,9 @@ renderizarGastos();
 function agregarGasto() {
     Array.isArray(historial) && (historial === null || historial === void 0 ? void 0 : historial.push());
 }
-function handleVisibilidad(elemento) {
-    elemento.classList.contains("oculto")
-        ? elemento.classList.remove("oculto")
-        : elemento.classList.add("oculto");
-}
+// Modal Nuevo Gasto
 btnAbrirModal === null || btnAbrirModal === void 0 ? void 0 : btnAbrirModal.addEventListener("click", function (e) {
+    handleVisibilidad(blurSpan);
     handleVisibilidad(modalAgregarGasto);
 });
 btnAgregarNuevoGasto === null || btnAgregarNuevoGasto === void 0 ? void 0 : btnAgregarNuevoGasto.addEventListener("click", function (e) {
@@ -54,17 +50,22 @@ btnAgregarNuevoGasto === null || btnAgregarNuevoGasto === void 0 ? void 0 : btnA
     if (!inputNombre || !inputNombre.value) {
         inputVacio = true;
         inputNombre.classList.add("error");
-        console.log("ingrese nombre");
+        handleVisibilidad(errorNombre);
     }
     if (!inputTotal || !inputTotal.value) {
         inputVacio = true;
         inputTotal.classList.add("error");
-        console.log("ingrese total");
+        handleVisibilidad(errorTotal);
+    }
+    if (!inputFecha || !inputFecha.value) {
+        inputVacio = true;
+        inputFecha.classList.add("error");
+        handleVisibilidad(errorFecha);
     }
     if (!inputCategoria || !inputCategoria.value) {
         inputVacio = true;
         inputCategoria.classList.add("error");
-        console.log("elija categoria");
+        handleVisibilidad(errorCat);
     }
     if (inputVacio === false) {
         var nuevoGasto = {
@@ -77,6 +78,7 @@ btnAgregarNuevoGasto === null || btnAgregarNuevoGasto === void 0 ? void 0 : btnA
         localStorage.setItem("historial", JSON.stringify(historial));
         renderizarGastos();
         modalAgregarGasto === null || modalAgregarGasto === void 0 ? void 0 : modalAgregarGasto.classList.add("oculto");
+        handleVisibilidad(blurSpan);
     }
 });
 btnCancelarNuevoGasto === null || btnCancelarNuevoGasto === void 0 ? void 0 : btnCancelarNuevoGasto.addEventListener("click", function (e) {
@@ -85,5 +87,7 @@ btnCancelarNuevoGasto === null || btnCancelarNuevoGasto === void 0 ? void 0 : bt
     inputTotal.value = "";
     inputCategoria.value = "";
     inputFecha.value = "";
+    handleVisibilidad(blurSpan);
     handleVisibilidad(modalAgregarGasto);
 });
+// Graficos

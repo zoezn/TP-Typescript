@@ -4,14 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestor de gastos personales</title>
-
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"
+    ></script>
     <link rel="stylesheet" href="./style/style.css" />
   </head>
-  <body>
+  <body id="body" class="">
     <header></header>
     <main>
       <div class="encabezado">
-        <h1>Gatos personales</h1>
+        <h1>Gastos personales</h1>
         <div class="utils">
           <h3 id="btn-add-gasto" class="btn">Nuevo gasto</h3>
           <div id="modo-tema" class="btn">
@@ -23,19 +26,28 @@
           <form>
             <h2>Ingrese información sobre el nuevo gasto</h2>
             <label for="nombre"
-              >Nombre:
+              >Nombre: <span>*</span>
               <input type="text" name="nombre" id="input-nombre" />
+              <p class="error-nombre oculto error-desc">
+                Por favor, ingrese un nombre.
+              </p>
             </label>
             <label for="total"
-              >Total:
+              >Total: <span>*</span>
               <input type="number" name="total" id="input-total" />
+              <p class="error-total oculto error-desc">
+                Por favor, ingrese un total.
+              </p>
             </label>
             <label for="fecha"
-              >Fecha:
+              >Fecha:<span>*</span>
               <input type="date" name="fecha" id="input-fecha" />
+              <p class="error-fecha oculto error-desc">
+                Por favor, elija una fecha.
+              </p>
             </label>
             <label for="categorias"
-              >Categoría:
+              >Categoría: <span>*</span>
               <select name="categorias" id="select-categorias">
                 <option value="" selected disabled hidden>Seleccionar</option>
                 <option value="hogar">Hogar</option>
@@ -44,19 +56,47 @@
                 <option value="regalos">Regalos</option>
                 <option value="emergencias">Emergencias</option>
               </select>
+              <p class="error-cat oculto error-desc">
+                Por favor, elija una categoría.
+              </p>
+            </label>
+            <label for="comentarios"
+              >Comentarios:
+              <input type="text" name="comentarios" id="input-comentarios" />
             </label>
             <div class="buttons">
-              <button type="reset" id="btn-cancelar">Cancelar</button>
-              <button type="submit" id="btn-aceptar">Aceptar</button>
+              <button type="reset" id="btn-cancelar" class="btn">
+                Cancelar
+              </button>
+              <button type="submit" id="btn-aceptar" class="btn">
+                Aceptar
+              </button>
             </div>
           </form>
         </div>
+        <span class="blur oculto"></span>
       </div>
-      <div class="graficos-contenedor"></div>
+      <div class="graficos-contenedor">
+        <div id="grafico-torta">
+          <h2>Gastos por categorías:</h2>
+          <canvas
+            id="pieChart"
+            width="250"
+            height="250"
+            values="[10, 40, 30, 20]"
+            labels='["Not Good", "Good", "Very Good", "Excelent"]'
+          >
+          </canvas>
+
+          <canvas id="tip" width="100" height="25"> </canvas>
+        </div>
+      </div>
       <div class="historial-contenedor" id="historial-contenedor"></div>
     </main>
     <footer></footer>
     <script src="./script/app.js"></script>
     <script src="./script/theme/themes.js"></script>
+    <script src="./script/storage/storage.js"></script>
+    <script src="./script/charts/pieChart.js"></script>
   </body>
 </html>

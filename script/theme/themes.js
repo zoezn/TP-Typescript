@@ -1,3 +1,4 @@
+var body = document.getElementById("body");
 var themeButton = document.getElementById("modo-tema");
 var sun = document.getElementById("sol");
 var moon = document.getElementById("luna");
@@ -10,4 +11,8 @@ themeButton.addEventListener("click", function () {
         sun.classList.add("oculto");
         moon.classList.remove("oculto");
     }
+    modoOscuro();
 });
+function modoOscuro() {
+    body.classList.toggle("dark");
+}
