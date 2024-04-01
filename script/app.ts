@@ -1,3 +1,5 @@
+import { render } from "./charts/pieChart";
+
 // Tipos
 type Gasto = {
   nombre: string;
@@ -48,6 +50,15 @@ let inputCategoria = <HTMLSelectElement>(
   document.getElementById("select-categorias")
 );
 
+// Gráficos
+const canvas: HTMLCanvasElement = document.getElementById(
+  "pieChart"
+) as HTMLCanvasElement;
+const stringValues = canvas.getAttribute("values");
+const stringLabels = canvas.getAttribute("labels");
+const values: number[] = JSON.parse(stringValues);
+const labels: string[] = JSON.parse(stringLabels);
+
 // Utiles
 const esPrimo = (num: number) => {
   for (let i = 2, s = Math.sqrt(num); i <= s; i++) {
@@ -62,9 +73,7 @@ function handleVisibilidad(elemento: Element) {
     : elemento.classList.add("oculto");
 }
 
-let historial: Gasto[] | string = JSON.parse(
-  localStorage.getItem("historial") || ([] as Gasto[])
-);
+let historial: Gasto[] | string = JSON.parse(localStorage.getItem("historial"));
 
 // Renderizado de historial de gastos
 function renderizarGastos() {
@@ -81,6 +90,7 @@ function renderizarGastos() {
             </div>
         `)
     );
+  calcularPorcentajes();
 }
 renderizarGastos();
 
@@ -143,4 +153,43 @@ btnCancelarNuevoGasto?.addEventListener("click", function (e) {
   handleVisibilidad(modalAgregarGasto);
 });
 
-// Graficos
+function calcularPorcentajes() {
+  let hogar: number = 0;
+  let impuestos = 0;
+  let emergencias = 0;
+  let salidas = 0;
+  let regalos = 0;
+  // let aux: Gasto[];
+  historial.map((e) => {
+    switch (e.categoria) {
+      case "hogar":
+        hogar += e.total;
+        break;
+      case "impuestos":
+        impuestos += e.total;
+        break;
+      case "emergencias":
+        emergencias += e.total;
+        break;
+      case "salidas":
+        salidas += e.total;
+        break;
+      case "regalos":
+        regalos += e.total;
+        break;
+    }
+  });
+
+  let total = hogar + impuestos + emergencias + salidas + regalos;
+  hogar = (hogar * 100) / total;
+  impuestos = (impuestos * 100) / total;
+  emergencias = (emergencias * 100) / total;
+  salidas = (salidas * 100) / total;
+  regalos = (regalos * 100) / total;
+
+  let aux = [hogar, impuestos, emergencias, salidas, regalos];
+  stringValues = JSON.stringify(aux);
+  console.log(stringLabels);
+  console.log(stringValues);
+  render();
+}

@@ -1,8 +1,9 @@
-var body = document.getElementById("body");
-var themeButton = document.getElementById("modo-tema");
-var sun = document.getElementById("sol");
-var moon = document.getElementById("luna");
-themeButton.addEventListener("click", function () {
+"use strict";
+const body = document.getElementById("body");
+const themeButton = document.getElementById("modo-tema");
+const sun = document.getElementById("sol");
+const moon = document.getElementById("luna");
+themeButton.addEventListener("click", () => {
     if (sun.classList.contains("oculto")) {
         sun.classList.remove("oculto");
         moon.classList.add("oculto");

@@ -239,4 +239,7 @@ const tooltipElement: HTMLCanvasElement = <HTMLCanvasElement>(
 );
 
 const pieChart = new PieChart(pieChartElement, tooltipElement);
+
+export const render = () => pieChart.render();
+
 pieChart.render();

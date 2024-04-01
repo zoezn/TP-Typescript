@@ -1,21 +1,28 @@
-var historialContenedor = document.getElementById("historial-contenedor");
-var btnAbrirModal = document.getElementById("btn-add-gasto");
-var modalAgregarGasto = document.querySelector(".agregar-gasto");
-var btnAgregarNuevoGasto = document.querySelector("#btn-aceptar");
-var btnCancelarNuevoGasto = document.querySelector("#btn-cancelar");
-var errorNombre = document.querySelector(".error-nombre");
-var errorTotal = document.querySelector(".error-total");
-var errorFecha = document.querySelector(".error-fecha");
-var errorCat = document.querySelector(".error-cat");
-var blurSpan = document.querySelector(".blur");
-var formulario = document.querySelector("form");
-var inputNombre = document.getElementById("input-nombre");
-var inputFecha = document.getElementById("input-fecha");
-var inputTotal = document.getElementById("input-total");
-var inputCategoria = (document.getElementById("select-categorias"));
+import { render } from "./charts/pieChart";
+const historialContenedor = document.getElementById("historial-contenedor");
+const btnAbrirModal = document.getElementById("btn-add-gasto");
+const modalAgregarGasto = document.querySelector(".agregar-gasto");
+const btnAgregarNuevoGasto = document.querySelector("#btn-aceptar");
+const btnCancelarNuevoGasto = document.querySelector("#btn-cancelar");
+const errorNombre = document.querySelector(".error-nombre");
+const errorTotal = document.querySelector(".error-total");
+const errorFecha = document.querySelector(".error-fecha");
+const errorCat = document.querySelector(".error-cat");
+const blurSpan = document.querySelector(".blur");
+const formulario = document.querySelector("form");
+let inputNombre = document.getElementById("input-nombre");
+let inputFecha = document.getElementById("input-fecha");
+let inputTotal = document.getElementById("input-total");
+let inputCategoria = (document.getElementById("select-categorias"));
+// Gráficos
+const canvas = document.getElementById("pieChart");
+const stringValues = canvas.getAttribute("values");
+const stringLabels = canvas.getAttribute("labels");
+const values = JSON.parse(stringValues);
+const labels = JSON.parse(stringLabels);
 // Utiles
-var esPrimo = function (num) {
-    for (var i = 2, s = Math.sqrt(num); i <= s; i++) {
+const esPrimo = (num) => {
+    for (let i = 2, s = Math.sqrt(num); i <= s; i++) {
         if (num % i === 0)
             return false;
     }
@@ -26,14 +33,20 @@ function handleVisibilidad(elemento) {
         ? elemento.classList.remove("oculto")
         : elemento.classList.add("oculto");
 }
-var historial = JSON.parse(localStorage.getItem("historial") || []);
+let historial = JSON.parse(localStorage.getItem("historial"));
 // Renderizado de historial de gastos
 function renderizarGastos() {
     historialContenedor.innerHTML = "";
     Array.isArray(historial) &&
-        (historial === null || historial === void 0 ? void 0 : historial.forEach(function (g, i) {
-            return (historialContenedor.innerHTML += "\n        <div class=\"gasto ".concat(esPrimo(i + 1) ? "impar" : "par", "\">\n            <h3>").concat(g.fecha, "</h3> \n            <h2>").concat(g.nombre, "</h2> \n            <p>").concat(g.categoria, "</p>\n            <p>").concat(g.total, "</p> \n            </div>\n        "));
-        }));
+        (historial === null || historial === void 0 ? void 0 : historial.forEach((g, i) => (historialContenedor.innerHTML += `
+        <div class="gasto ${esPrimo(i + 1) ? "impar" : "par"}">
+            <h3>${g.fecha}</h3> 
+            <h2>${g.nombre}</h2> 
+            <p>${g.categoria}</p>
+            <p>${g.total}</p> 
+            </div>
+        `)));
+    calcularPorcentajes();
 }
 renderizarGastos();
 function agregarGasto() {
@@ -46,7 +59,7 @@ btnAbrirModal === null || btnAbrirModal === void 0 ? void 0 : btnAbrirModal.addE
 });
 btnAgregarNuevoGasto === null || btnAgregarNuevoGasto === void 0 ? void 0 : btnAgregarNuevoGasto.addEventListener("click", function (e) {
     e.preventDefault();
-    var inputVacio = false;
+    let inputVacio = false;
     if (!inputNombre || !inputNombre.value) {
         inputVacio = true;
         inputNombre.classList.add("error");
@@ -68,7 +81,7 @@ btnAgregarNuevoGasto === null || btnAgregarNuevoGasto === void 0 ? void 0 : btnA
         handleVisibilidad(errorCat);
     }
     if (inputVacio === false) {
-        var nuevoGasto = {
+        let nuevoGasto = {
             nombre: inputNombre.value,
             fecha: inputFecha.value,
             total: parseInt(inputTotal.value),
@@ -90,4 +103,41 @@ btnCancelarNuevoGasto === null || btnCancelarNuevoGasto === void 0 ? void 0 : bt
     handleVisibilidad(blurSpan);
     handleVisibilidad(modalAgregarGasto);
 });
-// Graficos
+function calcularPorcentajes() {
+    let hogar = 0;
+    let impuestos = 0;
+    let emergencias = 0;
+    let salidas = 0;
+    let regalos = 0;
+    // let aux: Gasto[];
+    historial.map((e) => {
+        switch (e.categoria) {
+            case "hogar":
+                hogar += e.total;
+                break;
+            case "impuestos":
+                impuestos += e.total;
+                break;
+            case "emergencias":
+                emergencias += e.total;
+                break;
+            case "salidas":
+                salidas += e.total;
+                break;
+            case "regalos":
+                regalos += e.total;
+                break;
+        }
+    });
+    let total = hogar + impuestos + emergencias + salidas + regalos;
+    hogar = (hogar * 100) / total;
+    impuestos = (impuestos * 100) / total;
+    emergencias = (emergencias * 100) / total;
+    salidas = (salidas * 100) / total;
+    regalos = (regalos * 100) / total;
+    let aux = [hogar, impuestos, emergencias, salidas, regalos];
+    stringValues = JSON.stringify(aux);
+    console.log(stringLabels);
+    console.log(stringValues);
+    render();
+}
