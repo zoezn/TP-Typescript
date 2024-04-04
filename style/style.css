@@ -12,6 +12,9 @@
   --azul: #364d5c;
   --dark: #0d0d0d;
   --light: #f2f2f2;
+  --lilac: #9ca1db;
+  --green: #9cdbae;
+  --yellow: #dbce9c;
 }
 * {
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
@@ -75,11 +78,30 @@ button,
 }
 .gasto {
   display: flex;
-  justify-content: space-around;
+  /* justify-content: space-evenly; */
   align-items: center;
+  justify-content: center;
   width: 100%;
   background-color: rgba(167, 8, 8, 0.28);
 }
+.gasto h3 {
+  width: 15%;
+}
+.gasto h2 {
+  width: 25%;
+}
+.gasto p {
+  width: 25%;
+}
+
+.categoria-box {
+  width: 15%;
+}
+.total-box {
+  width: 25%;
+  text-align: center;
+}
+
 .par {
   background-color: rgba(167, 8, 8, 0.36);
 }
@@ -175,13 +197,23 @@ select {
   opacity: 0.7;
 }
 
+.trashcan {
+  height: 20px;
+  width: 20px;
+}
+
 /* Graficos */
 .graficos-contenedor {
-  height: 400px;
+  /* height: 400px; */
   display: flex;
   justify-content: space-evenly;
   align-items: center;
 }
 
+#grafico-pie {
+}
+#grafico-pie {
+  font-family: white;
+}
 #grafico-torta {
 }

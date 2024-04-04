@@ -1,4 +1,4 @@
-import { render } from "./charts/pieChart";
+import { totalFormatter } from "./utils/utils.js";
 const historialContenedor = document.getElementById("historial-contenedor");
 const btnAbrirModal = document.getElementById("btn-add-gasto");
 const modalAgregarGasto = document.querySelector(".agregar-gasto");
@@ -15,11 +15,6 @@ let inputFecha = document.getElementById("input-fecha");
 let inputTotal = document.getElementById("input-total");
 let inputCategoria = (document.getElementById("select-categorias"));
 // Gráficos
-const canvas = document.getElementById("pieChart");
-const stringValues = canvas.getAttribute("values");
-const stringLabels = canvas.getAttribute("labels");
-const values = JSON.parse(stringValues);
-const labels = JSON.parse(stringLabels);
 // Utiles
 const esPrimo = (num) => {
     for (let i = 2, s = Math.sqrt(num); i <= s; i++) {
@@ -33,7 +28,7 @@ function handleVisibilidad(elemento) {
         ? elemento.classList.remove("oculto")
         : elemento.classList.add("oculto");
 }
-let historial = JSON.parse(localStorage.getItem("historial"));
+let historial = JSON.parse(localStorage.getItem("historial") || "{}");
 // Renderizado de historial de gastos
 function renderizarGastos() {
     historialContenedor.innerHTML = "";
@@ -42,8 +37,9 @@ function renderizarGastos() {
         <div class="gasto ${esPrimo(i + 1) ? "impar" : "par"}">
             <h3>${g.fecha}</h3> 
             <h2>${g.nombre}</h2> 
-            <p>${g.categoria}</p>
-            <p>${g.total}</p> 
+            <p class='categoria-box'>${g.categoria}</p>
+            <p class='total-box'>${totalFormatter(g.total)}</p> 
+            <div> <img src='../img/trash-can.svg' class='trashcan' id=${"g-" + i}/></div> 
             </div>
         `)));
     calcularPorcentajes();
@@ -109,35 +105,71 @@ function calcularPorcentajes() {
     let emergencias = 0;
     let salidas = 0;
     let regalos = 0;
-    // let aux: Gasto[];
-    historial.map((e) => {
-        switch (e.categoria) {
-            case "hogar":
-                hogar += e.total;
-                break;
-            case "impuestos":
-                impuestos += e.total;
-                break;
-            case "emergencias":
-                emergencias += e.total;
-                break;
-            case "salidas":
-                salidas += e.total;
-                break;
-            case "regalos":
-                regalos += e.total;
-                break;
-        }
-    });
-    let total = hogar + impuestos + emergencias + salidas + regalos;
-    hogar = (hogar * 100) / total;
-    impuestos = (impuestos * 100) / total;
-    emergencias = (emergencias * 100) / total;
-    salidas = (salidas * 100) / total;
-    regalos = (regalos * 100) / total;
-    let aux = [hogar, impuestos, emergencias, salidas, regalos];
-    stringValues = JSON.stringify(aux);
-    console.log(stringLabels);
-    console.log(stringValues);
-    render();
+    Array.isArray(historial) &&
+        historial.forEach((e) => {
+            switch (e.categoria) {
+                case "hogar":
+                    hogar += e.total;
+                    break;
+                case "impuestos":
+                    impuestos += e.total;
+                    break;
+                case "emergencias":
+                    emergencias += e.total;
+                    break;
+                case "salidas":
+                    salidas += e.total;
+                    break;
+                case "regalos":
+                    regalos += e.total;
+                    break;
+            }
+        });
+    return {
+        Impuestos: impuestos,
+        Hogar: hogar,
+        Salidas: salidas,
+        Regalos: regalos,
+        Emergencias: emergencias,
+    };
+    // console.log(hogar);
+    // console.log(impuestos);
+    // console.log(emergencias);
+    // console.log(salidas);
+    // console.log(regalos);
+}
+let totalesPorCategoria = calcularPorcentajes();
+// Gráfico
+google.charts.load("current", { packages: ["corechart"] });
+google.charts.setOnLoadCallback(drawChart);
+let rows = [];
+for (const key in totalesPorCategoria) {
+    if (Object.prototype.hasOwnProperty.call(totalesPorCategoria, key)) {
+        const element = totalesPorCategoria[key];
+        element != 0 && rows.push([key, element]);
+    }
+}
+function drawChart() {
+    var data = new google.visualization.DataTable();
+    data.addColumn("string", "Categoría");
+    data.addColumn("number", "Gasto total");
+    data.addRows(rows);
+    let options = {
+        title: "Gastos por categoría:",
+        width: 800,
+        height: 500,
+        backgroundColor: "none",
+        colors: ["#38B6D1", "#C2DB9C", "#DBCE9C", "#DB9C9C", "#CF76AB", "#9CA1DB"],
+        fontName: "Franklin Gothic Medium",
+        titleTextStyle: { bold: false, fontSize: 20 },
+        fontSize: 18,
+        legend: { position: "bottom", textStyle: { bold: false, fontSize: 14 } },
+        pieSliceText: "label",
+    };
+    // Instantiate and draw our chart, passing in some options.
+    let elemento = document.getElementById("grafico-pie");
+    if (elemento != null) {
+        let chart = new google.visualization.PieChart(elemento);
+        chart.draw(data, options);
+    }
 }

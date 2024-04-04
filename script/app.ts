@@ -1,4 +1,4 @@
-import { render } from "./charts/pieChart";
+import { totalFormatter } from "./utils/utils.js";
 
 // Tipos
 type Gasto = {
@@ -6,13 +6,11 @@ type Gasto = {
   total: number;
   categoria: string;
   fecha: string;
+  comentarios?: string;
 };
-type Gasto2 = {
-  nombre: string;
-  total: number;
-  categoria: string;
-  fecha: Date;
-};
+interface TotalesPorCategoria {
+  [key: string]: number;
+}
 
 const historialContenedor: HTMLElement = document.getElementById(
   "historial-contenedor"
@@ -51,13 +49,6 @@ let inputCategoria = <HTMLSelectElement>(
 );
 
 // Gráficos
-const canvas: HTMLCanvasElement = document.getElementById(
-  "pieChart"
-) as HTMLCanvasElement;
-const stringValues = canvas.getAttribute("values");
-const stringLabels = canvas.getAttribute("labels");
-const values: number[] = JSON.parse(stringValues);
-const labels: string[] = JSON.parse(stringLabels);
 
 // Utiles
 const esPrimo = (num: number) => {
@@ -73,7 +64,9 @@ function handleVisibilidad(elemento: Element) {
     : elemento.classList.add("oculto");
 }
 
-let historial: Gasto[] | string = JSON.parse(localStorage.getItem("historial"));
+let historial: Gasto[] | string = JSON.parse(
+  localStorage.getItem("historial") || "{}"
+);
 
 // Renderizado de historial de gastos
 function renderizarGastos() {
@@ -85,8 +78,11 @@ function renderizarGastos() {
         <div class="gasto ${esPrimo(i + 1) ? "impar" : "par"}">
             <h3>${g.fecha}</h3> 
             <h2>${g.nombre}</h2> 
-            <p>${g.categoria}</p>
-            <p>${g.total}</p> 
+            <p class='categoria-box'>${g.categoria}</p>
+            <p class='total-box'>${totalFormatter(g.total)}</p> 
+            <div> <img src='../img/trash-can.svg' class='trashcan' id=${
+              "g-" + i
+            }/></div> 
             </div>
         `)
     );
@@ -159,37 +155,75 @@ function calcularPorcentajes() {
   let emergencias = 0;
   let salidas = 0;
   let regalos = 0;
-  // let aux: Gasto[];
-  historial.map((e) => {
-    switch (e.categoria) {
-      case "hogar":
-        hogar += e.total;
-        break;
-      case "impuestos":
-        impuestos += e.total;
-        break;
-      case "emergencias":
-        emergencias += e.total;
-        break;
-      case "salidas":
-        salidas += e.total;
-        break;
-      case "regalos":
-        regalos += e.total;
-        break;
-    }
-  });
+  Array.isArray(historial) &&
+    historial.forEach((e) => {
+      switch (e.categoria) {
+        case "hogar":
+          hogar += e.total;
+          break;
+        case "impuestos":
+          impuestos += e.total;
+          break;
+        case "emergencias":
+          emergencias += e.total;
+          break;
+        case "salidas":
+          salidas += e.total;
+          break;
+        case "regalos":
+          regalos += e.total;
+          break;
+      }
+    });
+  return {
+    Impuestos: impuestos,
+    Hogar: hogar,
+    Salidas: salidas,
+    Regalos: regalos,
+    Emergencias: emergencias,
+  };
+  // console.log(hogar);
+  // console.log(impuestos);
+  // console.log(emergencias);
+  // console.log(salidas);
+  // console.log(regalos);
+}
+let totalesPorCategoria: TotalesPorCategoria = calcularPorcentajes();
+// Gráfico
+google.charts.load("current", { packages: ["corechart"] });
+google.charts.setOnLoadCallback(drawChart);
+let rows: any[][] = [];
 
-  let total = hogar + impuestos + emergencias + salidas + regalos;
-  hogar = (hogar * 100) / total;
-  impuestos = (impuestos * 100) / total;
-  emergencias = (emergencias * 100) / total;
-  salidas = (salidas * 100) / total;
-  regalos = (regalos * 100) / total;
+for (const key in totalesPorCategoria) {
+  if (Object.prototype.hasOwnProperty.call(totalesPorCategoria, key)) {
+    const element = totalesPorCategoria[key];
 
-  let aux = [hogar, impuestos, emergencias, salidas, regalos];
-  stringValues = JSON.stringify(aux);
-  console.log(stringLabels);
-  console.log(stringValues);
-  render();
+    element != 0 && rows.push([key, element]);
+  }
+}
+function drawChart() {
+  var data = new google.visualization.DataTable();
+  data.addColumn("string", "Categoría");
+  data.addColumn("number", "Gasto total");
+  data.addRows(rows);
+
+  let options: google.visualization.PieChartOptions = {
+    title: "Gastos por categoría:",
+    width: 800,
+    height: 500,
+    backgroundColor: "none",
+    colors: ["#38B6D1", "#C2DB9C", "#DBCE9C", "#DB9C9C", "#CF76AB", "#9CA1DB"],
+    fontName: "Franklin Gothic Medium",
+    titleTextStyle: { bold: false, fontSize: 20 },
+    fontSize: 18,
+    legend: { position: "bottom", textStyle: { bold: false, fontSize: 14 } },
+    pieSliceText: "label",
+  };
+
+  // Instantiate and draw our chart, passing in some options.
+  let elemento = document.getElementById("grafico-pie");
+  if (elemento != null) {
+    let chart = new google.visualization.PieChart(elemento);
+    chart.draw(data, options);
+  }
 }

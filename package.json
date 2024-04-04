@@ -1,6 +1,5 @@
 {
-  "dependencies": {
-    "chart.js": "^4.4.2",
-    "piechart": "^1.0.0"
+  "devDependencies": {
+    "@types/google.visualization": "^0.0.74"
   }
 }
