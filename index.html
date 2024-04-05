@@ -60,10 +60,6 @@
                 Por favor, elija una categoría.
               </p>
             </label>
-            <label for="comentarios"
-              >Comentarios:
-              <input type="text" name="comentarios" id="input-comentarios" />
-            </label>
             <div class="buttons">
               <button type="reset" id="btn-cancelar" class="btn">
                 Cancelar
@@ -74,26 +70,36 @@
             </div>
           </form>
         </div>
-        <span class="blur oculto"></span>
       </div>
-      <div class="graficos-contenedor">
-        <!-- <div id="grafico-torta">
-          <h2>Gastos por categorías:</h2>
-          <canvas
-            id="pieChart"
-            width="250"
-            height="250"
-            values="[80, 20]"
-            labels='["Hogar", "Impuestos", "Salidas", "Regalos", "Emergencias"]'
-          >
-          </canvas>
+      <span class="blur oculto"></span>
+      <div class="error-no-gastos oculto">
+        <h3>¡Todavía no agregaste ningún gasto!</h3>
+        <p>Podés hacerlo desde el botón "Nuevo gasto" o haciendo click acá</p>
+        <h3 id="btn-add-gasto-sec" class="btn">Nuevo gasto</h3>
+      </div>
 
-          <canvas id="tip" width="100" height="25"> </canvas>
-        </div> -->
-        <div id="grafico-pie">
-          <h2>Gastos por categoría:</h2>
-          <!-- <canvas id="pie-chart"></canvas> -->
+      <div class="graficos-contenedor">
+        <div id="grafico-pie"></div>
+        <div id="grafico-lineas"></div>
+      </div>
+      <div class="borrar-gasto oculto">
+        <h3>Estás seguro que querés borrar el gasto del historial?</h3>
+        <div class="buttons">
+          <button type="reset" id="btn-cancelar-borrar" class="btn">
+            Cancelar
+          </button>
+          <button type="submit" id="btn-aceptar-borrar" class="btn">
+            Aceptar
+          </button>
         </div>
+      </div>
+      <div class="filtrar-historial" id="filtrar-historial">
+        <p class="filtro" id="ordenar-fecha">Fecha</p>
+        <p class="filtro" id="ordenar-nombre">Nombre</p>
+        <p class="filtro" id="ordenar-categoria">Categoría</p>
+        <p class="filtro" id="ordenar-total">Total</p>
+        <p class="filtro" id="ordenar-basura"></p>
+        <!-- <p class="filtro" id="ordenar-ellipsis"></p> -->
       </div>
       <div class="historial-contenedor" id="historial-contenedor"></div>
     </main>
