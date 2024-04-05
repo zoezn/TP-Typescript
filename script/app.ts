@@ -398,11 +398,6 @@ function calcGastosPorMes() {
   Array.isArray(historial) &&
     historial.forEach((e) => {
       auxFecha = new Date(e.fecha);
-      let hogar = 0;
-      let impuestos = 0;
-      let emergencias = 0;
-      let salidas = 0;
-      let regalos = 0;
 
       data.hogar[auxFecha.getMonth()].total = 0;
       data.impuestos[auxFecha.getMonth()].total = 0;
