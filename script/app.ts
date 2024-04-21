@@ -23,6 +23,7 @@ interface dataChart {
   regalos: rowChart[];
 }
 
+// Selectores
 const historialContenedor: HTMLElement = document.getElementById(
   "historial-contenedor"
 ) as HTMLElement;
@@ -57,14 +58,12 @@ const errorCat: HTMLElement = document.querySelector(
   ".error-cat"
 ) as HTMLElement;
 const blurSpan: HTMLElement = document.querySelector(".blur") as HTMLElement;
-const formulario = document.querySelector("form");
 let inputNombre = <HTMLInputElement>document.getElementById("input-nombre");
 let inputFecha = <HTMLInputElement>document.getElementById("input-fecha");
 let inputTotal = <HTMLInputElement>document.getElementById("input-total");
 let inputCategoria = <HTMLSelectElement>(
   document.getElementById("select-categorias")
 );
-
 let aceptarBorrar = <HTMLSelectElement>(
   document.getElementById("btn-aceptar-borrar")
 );
@@ -80,7 +79,6 @@ let graficosContenedor = <HTMLSelectElement>(
 let filtrosContenedor = <HTMLSelectElement>(
   document.getElementById("filtrar-historial")
 );
-
 let botonesBorrar: NodeListOf<Element> =
   document.querySelectorAll(".btn-borrar");
 
@@ -107,6 +105,7 @@ function handleVisibilidad(elemento: Element) {
     : elemento.classList.add("oculto");
 }
 
+// Inicializo localStorage
 let historial: Gasto[] | string = JSON.parse(
   localStorage.getItem("historial") || "{}"
 );
@@ -215,7 +214,13 @@ btnAgregarNuevoGasto?.addEventListener("click", function (e) {
       total: parseInt(inputTotal.value),
       categoria: inputCategoria.value,
     };
-    Array.isArray(historial) && historial?.push(nuevoGasto);
+    if (Array.isArray(historial)) {
+      historial?.push(nuevoGasto);
+    } else {
+      historial = [];
+      historial?.push(nuevoGasto);
+    }
+
     localStorage.setItem("historial", JSON.stringify(historial));
     historial = JSON.parse(localStorage.getItem("historial") || "{}");
     renderizarGastos();
@@ -483,21 +488,10 @@ function drawChart2() {
     "Regalos",
     { role: "annotation" },
   ];
-  let dataChart: any[] = [
-    // [
-    //   "Mes",
-    //   "Hogar",
-    //   "Impuestos",
-    //   "Emergencias",
-    //   "Salidas",
-    //   "Regalos",
-    //   { role: "annotation" },
-    // ],
-  ];
+  let dataChart: any[] = [];
 
   dataChart = [];
   dataChart.push(config);
-  // dataChart.push();
   function capitalizeFirstLetter(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
